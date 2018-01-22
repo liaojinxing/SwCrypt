@@ -111,18 +111,18 @@ class SwCryptTest: XCTestCase {
 		}
 	}
 
-	func decryptOpenSSLKeys(_ type: String) {
-		let bundle = Bundle(for: type(of: self))
-		let encPEM = bundle.object(forInfoDictionaryKey: "testPrivEncryptedPEMAES" + type) as! String
+	func decryptOpenSSLKeys(_ pemType: String) {
+    	let bundle = Bundle(for: type(of: self))
+		let encPEM = bundle.object(forInfoDictionaryKey: "testPrivEncryptedPEMAES" + pemType) as! String
 		let decPEM = bundle.object(forInfoDictionaryKey: "testPrivDecryptedPEM") as! String
 		let d = try? SwKeyConvert.PrivateKey.decryptPEM(encPEM, passphrase: "hello")
 		XCTAssert(d != nil)
 		XCTAssert(d! == decPEM)
 	}
 
-	func decryptOpenSSLKeysBadPassphrase(_ type: String) {
-		let bundle = Bundle(for: type(of: self))
-		let encPEM = bundle.object(forInfoDictionaryKey: "testPrivEncryptedPEMAES" + type) as! String
+	func decryptOpenSSLKeysBadPassphrase(_ pemType: String) {
+    	let bundle = Bundle(for: type(of: self))
+		let encPEM = bundle.object(forInfoDictionaryKey: "testPrivEncryptedPEMAES" + pemType) as! String
 
 		XCTAssertThrowsError(try SwKeyConvert.PrivateKey.decryptPEM(encPEM, passphrase: "nohello")) {
 			XCTAssert($0 as? SwKeyConvert.SwError == SwKeyConvert.SwError.badPassphrase)
@@ -321,4 +321,5 @@ class SwCryptTest: XCTestCase {
 		let cmac = CC.CMAC.AESCMAC(input, key: key)
 		XCTAssert(cmac == expectedOutput)
 	}
+ 
 }
